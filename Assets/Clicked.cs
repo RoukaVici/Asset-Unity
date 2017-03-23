@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Clicked : MonoBehaviour {
-	public char motorNb;
+	public int motorNb;
 	public string assignedKey;
 	private bool vibrating = false;
 
@@ -19,15 +19,15 @@ public class Clicked : MonoBehaviour {
 		{
 			vibrating = true;
 			GetComponent<Renderer> ().material.color = Color.green;
-			print ("Activating Motor " + motorNb);
-			SendingToArduino.sendToArduino (motorNb, vibrating);
+			print ("Activating Motor " + motorNb.ToString());
+			SendingToArduino.sendToArduino ((char)motorNb, vibrating);
 		} 
 		else if (Input.GetKeyUp (assignedKey))
 		{
 			vibrating = false;
 			GetComponent<Renderer> ().material.color = Color.red;
-			print("Deactivating Motor " + motorNb);
-			SendingToArduino.sendToArduino (motorNb, vibrating);
+			print("Deactivating Motor " + motorNb.ToString());
+			SendingToArduino.sendToArduino ((char)motorNb, vibrating);
 		}
 	}
 
@@ -37,8 +37,8 @@ public class Clicked : MonoBehaviour {
 		{
 			vibrating = !vibrating;
 			GetComponent<Renderer> ().material.color = (vibrating ? Color.green : Color.red);
-			print ((vibrating ? "Activating Motor " : "Deactivating Motor ") + motorNb);
-			SendingToArduino.sendToArduino (motorNb, vibrating);
+			print ((vibrating ? "Activating Motor " : "Deactivating Motor ") + motorNb.ToString());
+			SendingToArduino.sendToArduino ((char)motorNb, vibrating);
 		}
 	}
 }

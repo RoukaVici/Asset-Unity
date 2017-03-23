@@ -41,6 +41,8 @@ public class SendingToArduino : MonoBehaviour {
 
 	public static void sendToArduino(char motorNb, bool vibrate)
 	{
+		print(motorNb);
+		print((vibrate ? (char)1 : (char)0));
 		sp.Write (new[] {motorNb, (vibrate ? (char)1 : (char)0)}, 0, 2);
 	}
 }
