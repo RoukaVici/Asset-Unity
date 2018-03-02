@@ -6,7 +6,7 @@ using System.Threading;
 public class SendingToArduino : MonoBehaviour {
 	public static SerialPort sp = new SerialPort("COM4", 9600);
 
-	// Use this for initialization
+	// Open a connection to the Serial port at start
 	void Start () {
 		OpenConnection ();
 	}
@@ -16,17 +16,17 @@ public class SendingToArduino : MonoBehaviour {
 		
 	}
 
+	// Open Connection to the Serial Port
 	public void OpenConnection()
 	{
 		if (sp != null) {
 			if (sp.IsOpen) {
 				sp.Close ();
 				print ("Closing port, because it was already in use.");
-			} else {
-				sp.Open ();
-				sp.ReadTimeout = 16;
-				print ("Port succesfully opened.");
 			}
+			sp.Open ();
+			sp.ReadTimeout = 16;
+			print ("Port succesfully opened.");
 		}
 		else if (sp.IsOpen)
 			print ("Port is already in use.");
