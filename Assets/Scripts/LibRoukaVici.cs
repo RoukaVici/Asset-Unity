@@ -13,39 +13,59 @@ public class LibRoukaVici : MonoBehaviour {
   [DllImport ("roukavici")]
   private static extern void StopRVici();
   [DllImport ("roukavici")]
-  unsafe private static extern int Write(char[] msg);
+  private static extern int Write(char[] msg);
   [DllImport ("roukavici")]
-  private static extern int Vibrate(char motor, char intensity);
+  private static extern int NewGroup(char[] name);
   [DllImport ("roukavici")]
-  unsafe private static extern int NewGroup(char[] name);
+  private static extern int AddToGroup(char[] name, char motor);
   [DllImport ("roukavici")]
-  unsafe private static extern int AddToGroup(char[] name, char motor);
+  private static extern int RmFromGroup(char[] name, char motor);
   [DllImport ("roukavici")]
-  unsafe private static extern int RmFromGroup(char[] name, char motor);
+  private static extern void VibrateGroup(char[] name, char intensity);
   [DllImport ("roukavici")]
-  unsafe private static extern void VibrateGroup(char[] name, char intensity);
+  private static extern int ChangeDeviceManager(char[] name);
+
   [DllImport ("roukavici")]
-  unsafe private static extern int ChangeDeviceManager(char[] name);
+  public static extern int Vibrate(char motor, char intensity);
 
   void Start() {
-    /**
-    * Automatically starts trying to find the device as well
-    * Return codes:
-    * 0: Success
-    * 1: Lib initialized, but could not find device
-    */
-    //Must be checked someday
-//    Debug.Log("Init Roukavici library");
-    Debug.Log(InitRVici());
-//    Debug.Log("Changing Device Manager to BTManager");
-    FindDevice();
-    Vibrate((char)0, (char)255);
-//    Debug.Log("Init Roukavici OK");
+    Debug.Log("Init Roukavici library...");
+    Debug.Log("Init Roukavici OK" + (InitRVici() != 0 ? " but no device found." : "."));
+  }
+
+  int Write(string name)
+  {
+      return Write(name.ToCharArray());
+  }
+
+  int NewGroup(string name)
+  {
+      return NewGroup(name.ToCharArray());
+  }
+
+  int AddToGroup(string name, char motor)
+  {
+      return AddToGroup(name.ToCharArray(), motor);
+  }
+
+  int RmFromGroup(string name, char motor)
+  {
+      return RmFromGroup(name.ToCharArray(), motor);
+  }
+
+  void VibrateGroup(string name, char intensity)
+  {
+      VibrateGroup(name.ToCharArray(), intensity);
+  }
+
+  int ChangeDeviceManager(string name)
+  {
+      return ChangeDeviceManager(name.ToCharArray());
   }
 
   void OnApplicationQuit() {
-//    Debug.Log("Roukavici library shutting down");
+    Debug.Log("Roukavici library shutting down...");
     StopRVici();
-//    Debug.Log("Roukavici library shutdown: OK");
+    Debug.Log("Roukavici library shutdown: OK.");
   }
 }

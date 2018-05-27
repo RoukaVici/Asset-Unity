@@ -37,6 +37,7 @@ public class ActivatePattern : MonoBehaviour {
 			this.delay = 0;
 		}
 		this.delay += 1;
+			// CALL ROUKAVICI LIB HERE
 			//		while (i < this.fingers.GetLength(1)) {
 			//SendingToArduino.sendToArduino ((char)this.fingers[i].getId(), this.fingers[i].getPatternById(this.counter));
 			// SendingToArduino.sendToArduino ((char)this.fingers[i].getId(), true);
@@ -51,6 +52,7 @@ public class ActivatePattern : MonoBehaviour {
 			this.vibrating = !this.vibrating;
 			GetComponent<TextMesh> ().color = (vibrating ? Color.green : Color.red);
 			Debug.Log ((this.vibrating ? "Activating pattern " : "Deactivating pattern ") + this.name);
+			// CALL ROUKAVICI LIB HERE
 //			SendingToArduino.sendToArduino ((char)motorNb, vibrating);
 		}
 	}

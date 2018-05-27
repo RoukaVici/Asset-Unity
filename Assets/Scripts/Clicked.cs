@@ -59,7 +59,7 @@ public class Clicked : MonoBehaviour {
 				Debug.Log("Vibrating finger ID: " + motorNb.ToString() + " Intensity of : " + currentStep);
 				currentStepIndex = (currentStepIndex == patterns[patternID].fingers[motorNb].pattern.Length - 1 ? 0 : ++currentStepIndex);
 				mTime = 0;
-				// CALL ROUKAVICI LIB FUNCTION HERE
+				// CALL ROUKAVICI LIB HERE
 			}
 		}
 	}
