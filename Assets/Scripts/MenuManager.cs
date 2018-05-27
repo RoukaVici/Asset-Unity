@@ -4,26 +4,30 @@ using UnityEngine;
 
 public class MenuManager : MonoBehaviour {
 	[SerializeField]
-	private GameObject MainMenu;
+	private GameObject PatternList;
 
 	[SerializeField]
-	private GameObject PatternManagerMenu;
+	private GameObject PatternEditorMenu;
 
 	void Start() {
-		displayMainMenu();
+		displayPatternList();
 	}
 
-	public void displayMainMenu() {
-		if (MainMenu)
-			MainMenu.SetActive(true);
-		if (PatternManagerMenu)
-			PatternManagerMenu.SetActive(false);
+	public void displayPatternList() {
+		if (PatternList)
+			PatternList.SetActive(true);
+		if (PatternEditorMenu)
+			PatternEditorMenu.SetActive(false);
 	}
 
-	public void displayPatternManagerMenu() {
-		if (MainMenu)
-			MainMenu.SetActive(false);
-		if (PatternManagerMenu)
-			PatternManagerMenu.SetActive(true);
+	public void displayPatternEditorMenu() {
+		if (PatternList)
+			PatternList.SetActive(false);
+		if (PatternEditorMenu)
+			PatternEditorMenu.SetActive(true);
+	}
+
+	public void addPattern() {
+
 	}
 }

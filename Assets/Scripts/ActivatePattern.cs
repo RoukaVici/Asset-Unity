@@ -6,7 +6,7 @@ using System.IO.Ports;
 public class ActivatePattern : MonoBehaviour {
 
 	private bool vibrating;
-	private string name;
+	private string mName;
 	private int counter;
 
 	public static SerialPort sp = new SerialPort("COM4", 9600);
