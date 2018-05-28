@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class RoukaViciController : MonoBehaviour
 {
-	[SerializeField]
-	private Color selectedItemColor;
+	public Color selectedItemColor;
 	private Color currentItemColor;
 	private static RoukaViciController _instance;
 	public static RoukaViciController instance

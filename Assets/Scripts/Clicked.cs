@@ -44,13 +44,16 @@ public class Clicked : MonoBehaviour {
 			currentStepIndex = 0;
 			rend.material.color = currentColor;
 			print("Deactivating Motor " + motorNb.ToString());
+			LibRoukaVici.Vibrate((char)motorNb, (char)0);
 		}
-		if (vibrating && RoukaViciController.instance) 
+		if (vibrating && RoukaViciController.instance)
 		{
 			mTime += Time.deltaTime;
 			List<VibrationStyle> patterns = RoukaViciController.instance.vibrationPatterns;
 			int patternID = RoukaViciController.instance.patternID;
 			if (patterns.Count > 0 && mTime >= patterns[patternID].delay) {
+				if (currentStepIndex >= patterns[patternID].fingers[motorNb].pattern.Count)
+					currentStepIndex = 0;
 				int currentStep = patterns[patternID].fingers[motorNb].pattern[currentStepIndex];
 				Debug.Log("Vibrating finger ID: " + motorNb.ToString() + " Intensity of : " + currentStep);
 				currentStepIndex = (currentStepIndex == patterns[patternID].fingers[motorNb].pattern.Count - 1 ? 0 : ++currentStepIndex);
@@ -68,5 +71,22 @@ public class Clicked : MonoBehaviour {
 			rend.material.color = (vibrating ? activatedColor : currentColor);
 			print ((vibrating ? "Activating Motor " : "Deactivating Motor ") + motorNb.ToString());
 		}
+	}
+
+	void OnTriggerEnter(Collider other)
+    {
+		if (vibrating)
+			return ;
+		print("Activating Motor " + motorNb.ToString());
+		rend.material.color = activatedColor;
+       	vibrating = true;
+    }
+
+	void OnTriggerExit(Collider other)
+	{
+		vibrating = false;
+		rend.material.color = currentColor;
+		print("Deactivating Motor " + motorNb.ToString());
+		LibRoukaVici.Vibrate((char)motorNb, (char)0);
 	}
 }

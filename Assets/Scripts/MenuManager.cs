@@ -68,9 +68,13 @@ public class MenuManager : MonoBehaviour
 		Destroy(RoukaViciController.instance.patternButtons[id]);
 		RoukaViciController.instance.patternButtons.RemoveAt(id);
 		RoukaViciController.instance.vibrationPatterns.RemoveAt(id);
-		if (id == RoukaViciController.instance.patternButtons.Count)
-			return ;
-		rearrangeButtons();
+		if (RoukaViciController.instance.patternID == id)
+		{
+			RoukaViciController.instance.patternID = 0;
+			RoukaViciController.instance.patternButtons[0].GetComponent<PatternData>().background.color = RoukaViciController.instance.selectedItemColor;
+		}
+		if (id != RoukaViciController.instance.patternButtons.Count)
+			rearrangeButtons();
 	}
 
 	private void rearrangeButtons()
