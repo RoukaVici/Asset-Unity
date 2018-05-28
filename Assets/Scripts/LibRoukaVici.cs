@@ -28,44 +28,68 @@ public class LibRoukaVici : MonoBehaviour {
   [DllImport ("roukavici")]
   public static extern int Vibrate(char motor, char intensity);
 
-  void Start() {
-    Debug.Log("Init Roukavici library...");
-    Debug.Log("Init Roukavici OK" + (InitRVici() != 0 ? " but no device found." : "."));
-  }
+  	private static LibRoukaVici _instance;
+    public static LibRoukaVici instance
+	{
+		get {
+			if (_instance == null)
+			{
+				_instance = GameObject.FindObjectOfType<LibRoukaVici>();
+			}
+			return _instance;
+		}
+	}
 
-  int Write(string name)
-  {
-      return Write(name.ToCharArray());
-  }
+    void Awake()
+	{
+		if (_instance == null)
+			_instance = this;
+		else if (instance != this)
+			Destroy(gameObject);
 
-  int NewGroup(string name)
-  {
-      return NewGroup(name.ToCharArray());
-  }
+		DontDestroyOnLoad(gameObject);
+	}
 
-  int AddToGroup(string name, char motor)
-  {
-      return AddToGroup(name.ToCharArray(), motor);
-  }
+    void Start()
+    {
+        Debug.Log("Init Roukavici library...");
+        Debug.Log("Init Roukavici OK" + (InitRVici() != 0 ? " but no device found." : "."));
+    }
 
-  int RmFromGroup(string name, char motor)
-  {
-      return RmFromGroup(name.ToCharArray(), motor);
-  }
+    int Write(string name)
+    {
+        return Write(name.ToCharArray());
+    }
 
-  void VibrateGroup(string name, char intensity)
-  {
-      VibrateGroup(name.ToCharArray(), intensity);
-  }
+    int NewGroup(string name)
+    {
+        return NewGroup(name.ToCharArray());
+    }
 
-  int ChangeDeviceManager(string name)
-  {
-      return ChangeDeviceManager(name.ToCharArray());
-  }
+    int AddToGroup(string name, char motor)
+    {
+        return AddToGroup(name.ToCharArray(), motor);
+    }
 
-  void OnApplicationQuit() {
-    Debug.Log("Roukavici library shutting down...");
-    StopRVici();
-    Debug.Log("Roukavici library shutdown: OK.");
+    int RmFromGroup(string name, char motor)
+    {
+        return RmFromGroup(name.ToCharArray(), motor);
+    }
+
+    void VibrateGroup(string name, char intensity)
+    {
+        VibrateGroup(name.ToCharArray(), intensity);
+    }
+
+    int ChangeDeviceManager(string name)
+    {
+        return ChangeDeviceManager(name.ToCharArray());
+    }
+
+    void OnApplicationQuit()
+    {
+        Debug.Log("Roukavici library shutting down...");
+        StopRVici();
+        Debug.Log("Roukavici library shutdown: OK.");
   }
 }

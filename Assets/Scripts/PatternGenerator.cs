@@ -4,48 +4,42 @@ using System.IO;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
-public class PatternGenerator : MonoBehaviour {
-
-	[SerializeField]
-	private Transform Menu;
-
-	[SerializeField]
-	private GameObject slotPrefab;
-
-	private void getFiles(string folder) {
+[RequireComponent(typeof(MenuManager))]
+public class PatternGenerator : MonoBehaviour
+{
+	private void getFiles(string folder)
+	{
 		DirectoryInfo dir = new DirectoryInfo(folder);
 		FileInfo[] info = dir.GetFiles("*.json");
 
-		int i = 0;
 		foreach (FileInfo f in info) {
-			string data = File.ReadAllText(info[i].FullName);
-			RoukaViciController.instance.vibrationPatterns.Add(JsonUtility.FromJson<VibrationStyle> (data));
-			int k = 2;
-			while (k < 11) {
-				string str = '{' + data.Split('{')[k];
-				RoukaViciController.instance.vibrationPatterns[i].addFinger(JsonUtility.FromJson<Fingers>(str.Remove(str.Length - 3)));
-				k += 1;
-			}
-			i += 1;
+			string data = File.ReadAllText(f.FullName);
+			string arrayData = data.Remove(1, data.IndexOf("\"fingers\"") - 1);
+			VibrationStyle vs = JsonUtility.FromJson<VibrationStyle>(data);
+			vs.fingers = JsonHelper.FromJson<Fingers>(arrayData);
+			RoukaViciController.instance.vibrationPatterns.Add(vs);
 		}
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
+		MenuManager menuManager = GetComponent<MenuManager>();
 		if (RoukaViciController.instance.vibrationPatterns.Count == 0)
 			this.getFiles("Patterns");
 
 		int i = 0;
-		foreach (VibrationStyle vs in RoukaViciController.instance.vibrationPatterns) {
-			GameObject button = Instantiate(slotPrefab);
+		foreach (VibrationStyle vs in RoukaViciController.instance.vibrationPatterns)
+		{
+			GameObject button = Instantiate(menuManager.slotPrefab);
 			button.transform.localPosition = new Vector3(0, 170 - (i + 1) * button.GetComponent<RectTransform>().rect.height, 0);
-			button.transform.SetParent(Menu, false);
+			button.transform.SetParent(menuManager.scrollViewContent, false);
 			button.GetComponentInChildren<Text>().text = vs.getName();
 			PatternData data = button.GetComponent<PatternData>();
 			data.ID = i;
 			data.selectPattern.onClick.AddListener(delegate {RoukaViciController.instance.setVibrationPattern(data.ID);});
-			data.name = vs.getName();
-			data.fingers = vs.getFingers();		
+			data.editPattern.onClick.AddListener(delegate {menuManager.editPattern(data.ID);});
+			data.removePattern.onClick.AddListener(delegate {menuManager.removePattern(data.ID);});
 			RoukaViciController.instance.patternButtons.Add(button);
 			i += 1;
 		}

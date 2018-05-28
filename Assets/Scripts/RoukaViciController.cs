@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoukaViciController : MonoBehaviour {
+public class RoukaViciController : MonoBehaviour
+{
 	[SerializeField]
 	private Color selectedItemColor;
 	private Color currentItemColor;
 	private static RoukaViciController _instance;
-	public static RoukaViciController instance {
+	public static RoukaViciController instance
+	{
 		get {
-			if (_instance == null) {
+			if (_instance == null)
+			{
 				_instance = GameObject.FindObjectOfType<RoukaViciController>();
 			}
 			return _instance;
@@ -20,7 +23,8 @@ public class RoukaViciController : MonoBehaviour {
 	public List<GameObject> patternButtons = new List<GameObject>();
 	public int patternID = 0;
 
-	void Awake() {
+	void Awake()
+	{
 		if (_instance == null)
 			_instance = this;
 		else if (instance != this)
@@ -29,7 +33,8 @@ public class RoukaViciController : MonoBehaviour {
 		DontDestroyOnLoad(gameObject);
 	}
 
-	public void setVibrationPattern(int newID) {
+	public void setVibrationPattern(int newID)
+	{
 		newID = newID < 0 ? 0 : newID;
 		if (newID == patternID)
 			return ;
@@ -39,14 +44,16 @@ public class RoukaViciController : MonoBehaviour {
 	}
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 		PatternData data = patternButtons[patternID].GetComponent<PatternData>();
 		currentItemColor = data.background.color;
 		data.background.color = selectedItemColor;
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 		
 	}
 }

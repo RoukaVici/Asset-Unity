@@ -5,10 +5,18 @@ using UnityEngine.UI;
 
 public class SliderInputfieldLink : MonoBehaviour {
 	[SerializeField]
-	InputField inputFieldIntensity;
+	private motorID id;
 
 	[SerializeField]
-	Slider sliderIntensity;
+	private InputField inputFieldIntensity;
+
+	[SerializeField]
+	private Slider sliderIntensity;
+
+	[SerializeField]
+	private PatternEditorData editor;
+
+	public float intensity;
 
 	void Start() {
 		if (inputFieldIntensity && sliderIntensity) {
@@ -19,6 +27,9 @@ public class SliderInputfieldLink : MonoBehaviour {
 
 	private void SliderUpdate() {
 		inputFieldIntensity.text = sliderIntensity.value.ToString();
+		intensity = sliderIntensity.value;
+		if (editor)
+			editor.pattern.fingers[(int)id].pattern[editor.getIteration()] = (int)intensity;
 	}
 
 	private void InputFieldUpdate() {
@@ -28,5 +39,15 @@ public class SliderInputfieldLink : MonoBehaviour {
 		else if (inputFieldIntensity.text.Length > 0)
 			value = int.Parse(inputFieldIntensity.text);
 		sliderIntensity.value = Mathf.Clamp(value, 0, 100);
+		intensity = sliderIntensity.value;
+		if (editor)
+			editor.pattern.fingers[(int)id].pattern[editor.getIteration()] = (int)intensity;
+	}
+
+	public void setValues(float newIntensity)
+	{
+		newIntensity = Mathf.Clamp(newIntensity, 0, 100);
+		inputFieldIntensity.text = newIntensity.ToString();
+		sliderIntensity.value = newIntensity;
 	}
 }
