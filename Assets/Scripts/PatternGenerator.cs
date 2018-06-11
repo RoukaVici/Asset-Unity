@@ -32,8 +32,8 @@ public class PatternGenerator : MonoBehaviour
 		foreach (VibrationStyle vs in RoukaViciController.instance.vibrationPatterns)
 		{
 			GameObject button = Instantiate(menuManager.slotPrefab);
-			button.transform.localPosition = new Vector3(0, 170 - (i + 1) * button.GetComponent<RectTransform>().rect.height, 0);
 			button.transform.SetParent(menuManager.scrollViewContent, false);
+			button.transform.localPosition = new Vector3(0, 170 - (i + 1) * button.GetComponent<RectTransform>().rect.height, 0);
 			button.GetComponentInChildren<Text>().text = vs.getName();
 			PatternData data = button.GetComponent<PatternData>();
 			data.ID = i;
