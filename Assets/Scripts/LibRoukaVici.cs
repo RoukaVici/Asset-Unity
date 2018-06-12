@@ -26,26 +26,21 @@ public class LibRoukaVici : MonoBehaviour {
     private static extern int ChangeDeviceManager(char[] name);
     [DllImport ("roukavici")]
     public static extern int Vibrate(char motor, char intensity);
+    [DllImport ("roukavici")]
+    public static extern void SetLogMode(int mode);
 
-    # if UNITY_STANDALONE_WIN
-        [DllImport ("roukavici")]
-        private static extern void RegisterUnityDebugCallback(DebugCallback callback);
-
-        [DllImport ("roukavici")]
-        public static extern void SetLogMode(int mode);
-
-        private delegate void DebugCallback(string message);
-
-        private static void UnityDebugMethod(string message)
-        {
-         Debug.Log("roukavici.dll: " + message);
-        }
-    # endif
-
+    [DllImport ("roukavici")]
+    private static extern void RegisterUnityDebugCallback(UnityDebugCallback callback);
+    private delegate void UnityDebugCallback(string message);
+    private static void UnityDebugMethod(string message)
+    {
+        Debug.Log("libroukavici: " + message);
+    }
   	private static LibRoukaVici _instance;
     public static LibRoukaVici instance
 	{
-		get {
+		get
+        {
 			if (_instance == null)
 			{
 				_instance = GameObject.FindObjectOfType<LibRoukaVici>();
@@ -53,6 +48,10 @@ public class LibRoukaVici : MonoBehaviour {
 			return _instance;
 		}
 	}
+
+    [SerializeField]
+    private bool verbose = false;
+    private bool checkVerbose;
 
     void Awake()
 	{
@@ -66,12 +65,24 @@ public class LibRoukaVici : MonoBehaviour {
 
     void Start()
     {
+        checkVerbose = verbose;
         Debug.Log("Init Roukavici library...");
         Debug.Log("Init Roukavici OK" + (InitRVici() != 0 ? " but no device found." : "."));
-        # if UNITY_STANDALONE_WIN
-            RegisterUnityDebugCallback(new DebugCallback(UnityDebugMethod));
+        RegisterUnityDebugCallback(new UnityDebugCallback(UnityDebugMethod));
+        if (verbose)
             SetLogMode(3);
-        # endif
+    }
+
+    void Update()
+    {
+        if (checkVerbose != verbose)
+        {
+            if (verbose)
+                Debug.Log("Activate RoukaVici logs");
+            else
+                Debug.Log("Stop RoukaVici logs");
+            checkVerbose = verbose;
+        }
     }
 
     int Write(string name)
