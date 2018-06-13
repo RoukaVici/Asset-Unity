@@ -78,9 +78,9 @@ public class LibRoukaVici : MonoBehaviour {
         if (checkVerbose != verbose)
         {
             if (verbose)
-                Debug.Log("Activate RoukaVici logs");
+                SetLogMode(3);
             else
-                Debug.Log("Stop RoukaVici logs");
+                SetLogMode(4);
             checkVerbose = verbose;
         }
     }
