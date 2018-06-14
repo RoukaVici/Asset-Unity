@@ -9,17 +9,17 @@ PluginImporter:
   isOverridable: 0
   platformData:
   - first:
-      '': Any
+      '': OSXIntel
     second:
       enabled: 0
       settings:
-        Exclude Editor: 0
-        Exclude Linux: 0
-        Exclude Linux64: 0
-        Exclude LinuxUniversal: 0
-        Exclude OSXUniversal: 0
-        Exclude Win: 0
-        Exclude Win64: 0
+        CPU: None
+  - first:
+      '': OSXIntel64
+    second:
+      enabled: 1
+      settings:
+        CPU: AnyCPU
   - first:
       Any: 
     second:
@@ -28,29 +28,28 @@ PluginImporter:
   - first:
       Editor: Editor
     second:
-      enabled: 1
+      enabled: 0
       settings:
         CPU: x86_64
         DefaultValueInitialized: true
-        OS: AnyOS
   - first:
       Facebook: Win
     second:
       enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       Facebook: Win64
     second:
-      enabled: 0
+      enabled: 1
       settings:
         CPU: AnyCPU
   - first:
       Standalone: Linux
     second:
-      enabled: 1
+      enabled: 0
       settings:
-        CPU: x86
+        CPU: None
   - first:
       Standalone: Linux64
     second:
@@ -61,19 +60,20 @@ PluginImporter:
       Standalone: LinuxUniversal
     second:
       enabled: 1
-      settings: {}
+      settings:
+        CPU: x86_64
   - first:
       Standalone: OSXUniversal
     second:
-      enabled: 1
+      enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: x86_64
   - first:
       Standalone: Win
     second:
-      enabled: 1
+      enabled: 0
       settings:
-        CPU: AnyCPU
+        CPU: None
   - first:
       Standalone: Win64
     second:
