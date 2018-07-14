@@ -4,13 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Renderer), typeof(Collider))]
-public class Clicked : MonoBehaviour {
+public class Motor : MonoBehaviour {
 
 	[SerializeField]
 	private Color activatedColor;
 	
 	[SerializeField]
-	private int motorNb;
+	private motorID motor;
 
 	[SerializeField]
 	private KeyCode assignedKey;
@@ -35,7 +35,7 @@ public class Clicked : MonoBehaviour {
 		{
 			vibrating = true;
 			rend.material.color = activatedColor;
-			print("Activating Motor " + motorNb.ToString());
+			print("Activating Motor " + motor.ToString());
 		} 
 		else if (Input.GetKeyUp (assignedKey))
 		{
@@ -43,8 +43,8 @@ public class Clicked : MonoBehaviour {
 			mTime = 0;
 			currentStepIndex = 0;
 			rend.material.color = currentColor;
-			print("Deactivating Motor " + motorNb.ToString());
-			LibRoukaVici.Vibrate((char)motorNb, (char)0);
+			print("Deactivating Motor " + motor.ToString());
+			LibRoukaVici.Vibrate((char)motor, (char)0);
 		}
 		if (vibrating && RoukaViciController.instance)
 		{
@@ -52,13 +52,13 @@ public class Clicked : MonoBehaviour {
 			List<VibrationStyle> patterns = RoukaViciController.instance.vibrationPatterns;
 			int patternID = RoukaViciController.instance.patternID;
 			if (patterns.Count > 0 && mTime >= patterns[patternID].delay) {
-				if (currentStepIndex >= patterns[patternID].fingers[motorNb].pattern.Count)
+				if (currentStepIndex >= patterns[patternID].fingers[(int)motor].pattern.Count)
 					currentStepIndex = 0;
-				int currentStep = patterns[patternID].fingers[motorNb].pattern[currentStepIndex];
-				Debug.Log("Vibrating finger ID: " + motorNb.ToString() + " Intensity of : " + currentStep);
-				currentStepIndex = (currentStepIndex == patterns[patternID].fingers[motorNb].pattern.Count - 1 ? 0 : ++currentStepIndex);
+				int currentStep = patterns[patternID].fingers[(int)motor].pattern[currentStepIndex];
+				Debug.Log("Vibrating finger ID: " + motor.ToString() + " Intensity of : " + currentStep);
+				currentStepIndex = (currentStepIndex == patterns[patternID].fingers[(int)motor].pattern.Count - 1 ? 0 : ++currentStepIndex);
 				mTime = 0;
-				LibRoukaVici.Vibrate((char)motorNb, (char)(currentStep * 255 / 100));
+				LibRoukaVici.Vibrate((char)motor, (char)(currentStep * 255 / 100));
 			}
 		}
 	}
@@ -69,7 +69,7 @@ public class Clicked : MonoBehaviour {
 		{
 			vibrating = !vibrating;
 			rend.material.color = (vibrating ? activatedColor : currentColor);
-			print ((vibrating ? "Activating Motor " : "Deactivating Motor ") + motorNb.ToString());
+			print ((vibrating ? "Activating Motor " : "Deactivating Motor ") + motor.ToString());
 		}
 	}
 
@@ -77,7 +77,7 @@ public class Clicked : MonoBehaviour {
     {
 		if (vibrating)
 			return ;
-		print("Activating Motor " + motorNb.ToString());
+		print("Activating Motor " + motor.ToString());
 		rend.material.color = activatedColor;
        	vibrating = true;
     }
@@ -86,7 +86,7 @@ public class Clicked : MonoBehaviour {
 	{
 		vibrating = false;
 		rend.material.color = currentColor;
-		print("Deactivating Motor " + motorNb.ToString());
-		LibRoukaVici.Vibrate((char)motorNb, (char)0);
+		print("Deactivating Motor " + motor.ToString());
+		LibRoukaVici.Vibrate((char)motor, (char)0);
 	}
 }

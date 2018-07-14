@@ -42,12 +42,17 @@ public class RoukaViciController : MonoBehaviour
 		patternButtons[patternID].GetComponent<PatternData>().background.color = selectedItemColor;
 	}
 
-	// Use this for initialization
-	void Start ()
+	public void initializeUI()
 	{
 		PatternData data = patternButtons[patternID].GetComponent<PatternData>();
 		currentItemColor = data.background.color;
 		data.background.color = selectedItemColor;
+	}
+
+	// Use this for initialization
+	void Start ()
+	{
+
 	}
 	
 	// Update is called once per frame

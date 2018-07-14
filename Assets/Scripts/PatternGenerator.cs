@@ -43,5 +43,6 @@ public class PatternGenerator : MonoBehaviour
 			RoukaViciController.instance.patternButtons.Add(button);
 			i += 1;
 		}
+		RoukaViciController.instance.initializeUI();
 	}
 }
