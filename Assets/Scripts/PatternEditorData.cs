@@ -53,7 +53,6 @@ public class PatternEditorData : MonoBehaviour
 	private SliderInputfieldLink[] fingers = new SliderInputfieldLink[(int)motorID.LAST_MOTOR];
 
 	[SerializeField]
-	private MenuManager menuManager;
 	public VibrationStyle pattern;
 
 	public void prepareEditor(int editID)
@@ -113,16 +112,17 @@ public class PatternEditorData : MonoBehaviour
 			File.WriteAllText("Patterns/" + pattern.name + ".json", data);
 		# endif
 
-		menuManager.addPatternSlot(RoukaViciController.instance.vibrationPatterns[currentPatternID]);
+		MenuManager.instance.addPatternSlot(RoukaViciController.instance.vibrationPatterns[currentPatternID]);
 		PatternData d = RoukaViciController.instance.patternButtons[currentPatternID].GetComponent<PatternData>();
 		d.patternName.text = pattern.name;
-		menuManager.displayPatternList();
+		MenuManager.instance.displayPatternList();
 	}
 
 	public void cancelEdit()
 	{
-		RoukaViciController.instance.vibrationPatterns.RemoveAt(RoukaViciController.instance.vibrationPatterns.Count - 1);
-		menuManager.displayPatternList();
+		if (RoukaViciController.instance.vibrationPatterns.Count > RoukaViciController.instance.patternButtons.Count)
+			RoukaViciController.instance.vibrationPatterns.RemoveAt(RoukaViciController.instance.vibrationPatterns.Count - 1);
+		MenuManager.instance.displayPatternList();
 	}
 
 	public void updateName()
