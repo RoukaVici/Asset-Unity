@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class RoukaViciController : MonoBehaviour
 {
-	public Color selectedItemColor;
-	private Color currentItemColor;
 	private static RoukaViciController _instance;
 	public static RoukaViciController instance
 	{
@@ -37,16 +35,9 @@ public class RoukaViciController : MonoBehaviour
 		newID = newID < 0 ? 0 : newID;
 		if (newID == patternID)
 			return ;
-		patternButtons[patternID].GetComponent<PatternData>().background.color = currentItemColor;
+		if (MenuManager.instance != null)
+			MenuManager.instance.selectPatternButton(newID, patternID);
 		patternID = newID;
-		patternButtons[patternID].GetComponent<PatternData>().background.color = selectedItemColor;
-	}
-
-	public void initializeUI()
-	{
-		PatternData data = patternButtons[patternID].GetComponent<PatternData>();
-		currentItemColor = data.background.color;
-		data.background.color = selectedItemColor;
 	}
 
 	// Use this for initialization

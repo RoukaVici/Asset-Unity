@@ -4,8 +4,26 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(PatternGenerator))]
 public class MenuManager : MonoBehaviour
 {
+	private static MenuManager _instance;
+	public static MenuManager instance
+	{
+		get {
+			if (_instance == null)
+			{
+				_instance = GameObject.FindObjectOfType<MenuManager>();
+			}
+			return _instance;
+		}
+	}
+
+
+	[SerializeField]
+	private Color selectedItemColor;
+	private Color currentItemColor;
+
 	[SerializeField]
 	private GameObject PatternList;
 
@@ -14,14 +32,27 @@ public class MenuManager : MonoBehaviour
 
 	[SerializeField]
 	private PatternEditorData patternEditorData;
+	public int patternNbLimit = 20;
 
 	public GameObject slotPrefab;
 
 	public RectTransform scrollViewContent;
 
+
+	void Awake()
+	{
+		if (_instance == null)
+			_instance = this;
+		else if (instance != this)
+			Destroy(gameObject);
+
+		DontDestroyOnLoad(gameObject);
+		displayPatternList();
+	}
+
 	void Start()
 	{
-		displayPatternList();
+
 	}
 
 	public void displayPatternList()
@@ -42,6 +73,8 @@ public class MenuManager : MonoBehaviour
 
 	public void addPattern()
 	{
+		if (RoukaViciController.instance.patternButtons.Count >= patternNbLimit)
+			return ;
 		VibrationStyle vs = new VibrationStyle();
 		vs.name = "My Pattern";
 		vs.delay = 0.3f;
@@ -58,6 +91,8 @@ public class MenuManager : MonoBehaviour
 
 	public void removePattern(int id)
 	{
+		if (RoukaViciController.instance.patternButtons.Count <= 1)
+			return;
 		# if UNITY_STANDALONE_WIN
 			if (File.Exists("Patterns\\" + RoukaViciController.instance.vibrationPatterns[id].name + ".json"))
 				File.Delete("Patterns\\" + RoukaViciController.instance.vibrationPatterns[id].name + ".json");
@@ -71,18 +106,17 @@ public class MenuManager : MonoBehaviour
 		if (RoukaViciController.instance.patternID == id)
 		{
 			RoukaViciController.instance.patternID = 0;
-			RoukaViciController.instance.patternButtons[0].GetComponent<PatternData>().background.color = RoukaViciController.instance.selectedItemColor;
+			RoukaViciController.instance.patternButtons[0].GetComponent<PatternData>().background.color = selectedItemColor;
 		}
 		if (id != RoukaViciController.instance.patternButtons.Count)
 			rearrangeButtons();
 	}
 
-	private void rearrangeButtons()
+	public void rearrangeButtons()
 	{
 		int i = 0;
 		foreach (GameObject b in RoukaViciController.instance.patternButtons)
 		{
-			b.transform.localPosition = new Vector3(0, 170 - (i + 1) * b.GetComponent<RectTransform>().rect.height, 0);
 			b.GetComponent<PatternData>().ID = i;
 			++i;
 		}
@@ -95,17 +129,29 @@ public class MenuManager : MonoBehaviour
 		patternEditorData.displayIteration();
 	}
 
+	public void initializeUI()
+	{
+		PatternData data = RoukaViciController.instance.patternButtons[0].GetComponent<PatternData>();
+		currentItemColor = data.background.color;
+		data.background.color = selectedItemColor;
+	}
+
+	public void selectPatternButton(int newID, int oldID)
+	{
+		RoukaViciController.instance.patternButtons[oldID].GetComponent<PatternData>().background.color = currentItemColor;
+		RoukaViciController.instance.patternButtons[newID].GetComponent<PatternData>().background.color = selectedItemColor;
+	}
+
 	public void addPatternSlot(VibrationStyle vs)
 	{
 		GameObject button = Instantiate(slotPrefab);
-		button.transform.localPosition = new Vector3(0, 170 - RoukaViciController.instance.vibrationPatterns.Count * button.GetComponent<RectTransform>().rect.height, 0);
-		button.transform.SetParent(scrollViewContent, false);
+		button.transform.SetParent(scrollViewContent, true);
 		button.GetComponentInChildren<Text>().text = vs.getName();
 		PatternData data = button.GetComponent<PatternData>();
-		data.ID = RoukaViciController.instance.vibrationPatterns.Count - 1;
 		data.selectPattern.onClick.AddListener(delegate {RoukaViciController.instance.setVibrationPattern(data.ID);});
 		data.editPattern.onClick.AddListener(delegate {editPattern(data.ID);});
 		data.removePattern.onClick.AddListener(delegate {removePattern(data.ID);});
 		RoukaViciController.instance.patternButtons.Add(button);
+		rearrangeButtons();
 	}
 }
