@@ -3,7 +3,8 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
-public class LibRoukaVici : MonoBehaviour {
+public class LibRoukaVici : MonoBehaviour
+{
     [DllImport ("roukavici")]
     public static extern int InitRVici();
     [DllImport ("roukavici")]

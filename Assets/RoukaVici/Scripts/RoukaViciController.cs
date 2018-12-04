@@ -16,7 +16,7 @@ public class RoukaViciController : MonoBehaviour
 		}
 	}
 
-	public List<VibrationStyle> vibrationPatterns = new List<VibrationStyle>();
+	public List<VibrationPattern> vibrationPatterns = new List<VibrationPattern>();
 	public List<GameObject> patternButtons = new List<GameObject>();
 	public int patternID = 0;
 
@@ -36,19 +36,7 @@ public class RoukaViciController : MonoBehaviour
 		if (newID == patternID)
 			return ;
 		if (MenuManager.instance != null)
-			MenuManager.instance.selectPatternButton(newID, patternID);
+			MenuManager.instance.SelectPatternButton(newID, patternID);
 		patternID = newID;
-	}
-
-	// Use this for initialization
-	void Start ()
-	{
-
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-		
 	}
 }

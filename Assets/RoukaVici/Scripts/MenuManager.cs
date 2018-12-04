@@ -25,10 +25,10 @@ public class MenuManager : MonoBehaviour
 	private Color currentItemColor;
 
 	[SerializeField]
-	private GameObject PatternList;
+	private GameObject patternList;
 
 	[SerializeField]
-	private GameObject PatternEditorMenu;
+	private GameObject patternEditorMenu;
 
 	[SerializeField]
 	private PatternEditorData patternEditorData;
@@ -47,49 +47,44 @@ public class MenuManager : MonoBehaviour
 			Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
-		displayPatternList();
+		DisplayPatternList();
 	}
 
-	void Start()
+	public void DisplayPatternList()
 	{
-
+		if (patternList)
+			patternList.SetActive(true);
+		if (patternEditorMenu)
+			patternEditorMenu.SetActive(false);
 	}
 
-	public void displayPatternList()
+	private void DisplayPatternEditorMenu()
 	{
-		if (PatternList)
-			PatternList.SetActive(true);
-		if (PatternEditorMenu)
-			PatternEditorMenu.SetActive(false);
+		if (patternList)
+			patternList.SetActive(false);
+		if (patternEditorMenu)
+			patternEditorMenu.SetActive(true);
 	}
 
-	private void displayPatternEditorMenu()
-	{
-		if (PatternList)
-			PatternList.SetActive(false);
-		if (PatternEditorMenu)
-			PatternEditorMenu.SetActive(true);
-	}
-
-	public void addPattern()
+	public void AddPattern()
 	{
 		if (RoukaViciController.instance.patternButtons.Count >= patternNbLimit)
 			return ;
-		VibrationStyle vs = new VibrationStyle();
+		VibrationPattern vs = new VibrationPattern();
 		vs.name = "My Pattern";
-		vs.delay = 0.3f;
-		for (int i = 0 ; i < vs.fingers.Length ; ++i)
+		vs.duration = 0.3f;
+		for (int i = 0 ; i < vs.motors.Length ; ++i)
 		{
-			vs.fingers[i] = new Fingers();
-			vs.fingers[i].id = i;
-			vs.fingers[i].pattern = new List<int>();
-			vs.fingers[i].pattern.Add(50);
+			vs.motors[i] = new Motor();
+			vs.motors[i].id = i;
+			vs.motors[i].pattern = new List<int>();
+			vs.motors[i].pattern.Add(50);
 		}
 		RoukaViciController.instance.vibrationPatterns.Add(vs);
-		editPattern(RoukaViciController.instance.vibrationPatterns.Count - 1);
+		EditPattern(RoukaViciController.instance.vibrationPatterns.Count - 1);
 	}
 
-	public void removePattern(int id)
+	public void RemovePattern(int id)
 	{
 		if (RoukaViciController.instance.patternButtons.Count <= 1)
 			return;
@@ -109,10 +104,10 @@ public class MenuManager : MonoBehaviour
 			RoukaViciController.instance.patternButtons[0].GetComponent<PatternData>().background.color = selectedItemColor;
 		}
 		if (id != RoukaViciController.instance.patternButtons.Count)
-			rearrangeButtons();
+			RearrangeButtons();
 	}
 
-	public void rearrangeButtons()
+	public void RearrangeButtons()
 	{
 		int i = 0;
 		foreach (GameObject b in RoukaViciController.instance.patternButtons)
@@ -122,36 +117,36 @@ public class MenuManager : MonoBehaviour
 		}
 	}
 
-	public void editPattern(int editID)
+	public void EditPattern(int editID)
 	{
-		displayPatternEditorMenu();
-		patternEditorData.prepareEditor(editID);
-		patternEditorData.displayIteration();
+		DisplayPatternEditorMenu();
+		patternEditorData.PrepareEditor(editID);
+		patternEditorData.DisplayIteration();
 	}
 
-	public void initializeUI()
+	public void InitializeUI()
 	{
 		PatternData data = RoukaViciController.instance.patternButtons[0].GetComponent<PatternData>();
 		currentItemColor = data.background.color;
 		data.background.color = selectedItemColor;
 	}
 
-	public void selectPatternButton(int newID, int oldID)
+	public void SelectPatternButton(int newID, int oldID)
 	{
 		RoukaViciController.instance.patternButtons[oldID].GetComponent<PatternData>().background.color = currentItemColor;
 		RoukaViciController.instance.patternButtons[newID].GetComponent<PatternData>().background.color = selectedItemColor;
 	}
 
-	public void addPatternSlot(VibrationStyle vs)
+	public void AddPatternSlot(VibrationPattern vs)
 	{
 		GameObject button = Instantiate(slotPrefab);
 		button.transform.SetParent(scrollViewContent, true);
 		button.GetComponentInChildren<Text>().text = vs.getName();
 		PatternData data = button.GetComponent<PatternData>();
 		data.selectPattern.onClick.AddListener(delegate {RoukaViciController.instance.setVibrationPattern(data.ID);});
-		data.editPattern.onClick.AddListener(delegate {editPattern(data.ID);});
-		data.removePattern.onClick.AddListener(delegate {removePattern(data.ID);});
+		data.editPattern.onClick.AddListener(delegate {EditPattern(data.ID);});
+		data.removePattern.onClick.AddListener(delegate {RemovePattern(data.ID);});
 		RoukaViciController.instance.patternButtons.Add(button);
-		rearrangeButtons();
+		RearrangeButtons();
 	}
 }

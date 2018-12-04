@@ -1,8 +1,7 @@
 {
     "name": "Linear",
-    "delay": 0.30000001192092898,
-    
-    "fingers": [
+    "duration": 0.30000001192092898,
+    "motors": [
         {
             "id": 0,
             "pattern": [

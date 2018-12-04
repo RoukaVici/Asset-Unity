@@ -11,27 +11,27 @@ public static class JsonHelper
     public static T[] FromJson<T>(string json)
     {
         Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(json);
-        return wrapper != null ? wrapper.fingers : null;
+        return wrapper != null ? wrapper.motors : null;
     }
 
     public static string ToJson<T>(T[] array)
     {
         Wrapper<T> wrapper = new Wrapper<T>();
-        wrapper.fingers = array;
+        wrapper.motors = array;
         return JsonUtility.ToJson(wrapper);
     }
 
     public static string ToJson<T>(T[] array, bool prettyPrint)
     {
         Wrapper<T> wrapper = new Wrapper<T>();
-        wrapper.fingers = array;
+        wrapper.motors = array;
         return JsonUtility.ToJson(wrapper, prettyPrint);
     }
 
     [Serializable]
     private class Wrapper<T>
     {
-        public T[] fingers;
+        public T[] motors;
     }
 	
 }
@@ -44,121 +44,121 @@ public class PatternEditorData : MonoBehaviour
 	private Dropdown dropdownIteration;
 
 	[SerializeField]
-	private InputField InputFieldPatternName;
+	private InputField inputFieldPatternName;
 
 	[SerializeField]
-	private InputField InputFieldPatternDelay;
+	private InputField inputFieldPatternDuration;
 
 	[SerializeField]
-	private SliderInputfieldLink[] fingers = new SliderInputfieldLink[(int)motorID.LAST_MOTOR];
+	private SliderInputfieldLink[] motors = new SliderInputfieldLink[(int)motorID.LAST_MOTOR];
 
 	[SerializeField]
-	public VibrationStyle pattern;
+	public VibrationPattern pattern;
 
-	public void prepareEditor(int editID)
+	public void PrepareEditor(int editID)
 	{
 		dropdownIteration.value = 0;
-		pattern = new VibrationStyle();
+		pattern = new VibrationPattern();
 		pattern.name = RoukaViciController.instance.vibrationPatterns[editID].name;
-		pattern.delay = RoukaViciController.instance.vibrationPatterns[editID].delay;
+		pattern.duration = RoukaViciController.instance.vibrationPatterns[editID].duration;
 		int j = 0;
-		foreach (Fingers f in RoukaViciController.instance.vibrationPatterns[editID].fingers)
+		foreach (Motor f in RoukaViciController.instance.vibrationPatterns[editID].motors)
 		{
-			pattern.fingers[j] = new Fingers();
-			pattern.fingers[j].pattern = new List<int>(f.pattern);
-			pattern.fingers[j].id = j;
+			pattern.motors[j] = new Motor();
+			pattern.motors[j].pattern = new List<int>(f.pattern);
+			pattern.motors[j].id = j;
 			++j;
 		}
 		currentPatternID = editID;
 		dropdownIteration.options.Clear();
-		InputFieldPatternName.text = pattern.name;
-		InputFieldPatternDelay.text = pattern.delay.ToString();
-		int count = pattern.fingers[0].pattern.Count;
+		inputFieldPatternName.text = pattern.name;
+		inputFieldPatternDuration.text = pattern.duration.ToString();
+		int count = pattern.motors[0].pattern.Count;
 		for (int i = 0 ; i < count ; ++i)
 		{
 			dropdownIteration.options.Add(new Dropdown.OptionData("Iteration " + (i + 1)));
 		}
 	}
 
-	public void displayIteration()
+	public void DisplayIteration()
 	{
 		for (int i = 0 ; i < (int)motorID.LAST_MOTOR ; ++i)
 		{
-			fingers[i].setValues(pattern.fingers[i].pattern[dropdownIteration.value]);
+			motors[i].SetValues(pattern.motors[i].pattern[dropdownIteration.value]);
 		}
 	}
 
-	public void savePattern()
+	public void SavePattern()
 	{
 		string oldFile = RoukaViciController.instance.vibrationPatterns[currentPatternID].name;
 		RoukaViciController.instance.vibrationPatterns[currentPatternID].name = pattern.name;
-		RoukaViciController.instance.vibrationPatterns[currentPatternID].delay = pattern.delay;
-		RoukaViciController.instance.vibrationPatterns[currentPatternID].fingers = pattern.fingers;
+		RoukaViciController.instance.vibrationPatterns[currentPatternID].duration = pattern.duration;
+		RoukaViciController.instance.vibrationPatterns[currentPatternID].motors = pattern.motors;
 
 		string data = JsonUtility.ToJson(pattern, true);
-		int index = data.IndexOf("\"fingers\"");
+		int index = data.IndexOf("\"motors\"");
 		data = data.Remove(index);
 
-		string arrayData = JsonHelper.ToJson(pattern.fingers, true);
+		string arrayData = JsonHelper.ToJson(pattern.motors, true);
 		arrayData = arrayData.Remove(arrayData.IndexOf('{'), 1);
 		data += arrayData;
 		# if UNITY_STANDALONE_WIN
-			if (oldFile != pattern.name && File.Exists("Patterns\\" + oldFile + ".json"))
-				File.Delete("Patterns\\" + oldFile + ".json");
-			File.WriteAllText("Patterns\\" + pattern.name + ".json", data);
+			if (oldFile != pattern.name && File.Exists("Vibration Patterns\\" + oldFile + ".json"))
+				File.Delete("Vibration Patterns\\" + oldFile + ".json");
+			File.WriteAllText("Vibration Patterns\\" + pattern.name + ".json", data);
 		# else
-			if (oldFile != pattern.name && File.Exists("Patterns/" + oldFile + ".json"))
-				File.Delete("Patterns/" + oldFile + ".json");
-			File.WriteAllText("Patterns/" + pattern.name + ".json", data);
+			if (oldFile != pattern.name && File.Exists("Vibration Patterns/" + oldFile + ".json"))
+				File.Delete("Vibration Patterns/" + oldFile + ".json");
+			File.WriteAllText("Vibration Patterns/" + pattern.name + ".json", data);
 		# endif
 
-		MenuManager.instance.addPatternSlot(RoukaViciController.instance.vibrationPatterns[currentPatternID]);
+		MenuManager.instance.AddPatternSlot(RoukaViciController.instance.vibrationPatterns[currentPatternID]);
 		PatternData d = RoukaViciController.instance.patternButtons[currentPatternID].GetComponent<PatternData>();
 		d.patternName.text = pattern.name;
-		MenuManager.instance.displayPatternList();
+		MenuManager.instance.DisplayPatternList();
 	}
 
-	public void cancelEdit()
+	public void CancelEdit()
 	{
 		if (RoukaViciController.instance.vibrationPatterns.Count > RoukaViciController.instance.patternButtons.Count)
 			RoukaViciController.instance.vibrationPatterns.RemoveAt(RoukaViciController.instance.vibrationPatterns.Count - 1);
-		MenuManager.instance.displayPatternList();
+		MenuManager.instance.DisplayPatternList();
 	}
 
-	public void updateName()
+	public void UpdateName()
 	{
-		pattern.name = InputFieldPatternName.text;
+		pattern.name = inputFieldPatternName.text;
 	}
 
-	public void updateDelay()
+	public void Updateduration()
 	{
 		float v;
-		if (InputFieldPatternDelay.text.ToCharArray()[0] == '-')
+		if (inputFieldPatternDuration.text.ToCharArray()[0] == '-')
 		{
 			v = 0;
-			InputFieldPatternDelay.text = "0";
+			inputFieldPatternDuration.text = "0";
 		}
 		else
-			v = float.Parse(InputFieldPatternDelay.text);
-		pattern.delay = v;
+			v = float.Parse(inputFieldPatternDuration.text);
+		pattern.duration = v;
 	}
 
-	public void addIteration() 
+	public void AddIteration() 
 	{
-		foreach(Fingers f in pattern.fingers)
+		foreach(Motor f in pattern.motors)
 		{
 			f.pattern.Insert(dropdownIteration.value + 1, 50);
 		}
 		dropdownIteration.options.Add(new Dropdown.OptionData("Iteration " + (dropdownIteration.options.Count + 1)));
 		dropdownIteration.value += 1;
-		displayIteration();
+		DisplayIteration();
 	}
 
-	public void removeIteration()
+	public void RemoveIteration()
 	{
-		if (pattern.fingers[0].pattern.Count == 1)
+		if (pattern.motors[0].pattern.Count == 1)
 			return ;
-		foreach (Fingers f in pattern.fingers)
+		foreach (Motor f in pattern.motors)
 		{
 			f.pattern.RemoveAt(dropdownIteration.value);
 		}
@@ -167,10 +167,10 @@ public class PatternEditorData : MonoBehaviour
 			dropdownIteration.options[i].text = "Iteration " + (i + 1);
 		if (dropdownIteration.value >= dropdownIteration.options.Count)
 			dropdownIteration.value -= 1;
-		displayIteration();
+		DisplayIteration();
 	}
 
-	public int getIteration()
+	public int GetIteration()
 	{
 		return dropdownIteration.value;
 	}

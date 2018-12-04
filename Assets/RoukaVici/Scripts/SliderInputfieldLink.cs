@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SliderInputfieldLink : MonoBehaviour {
+public class SliderInputfieldLink : MonoBehaviour
+{
 	[SerializeField]
 	private motorID id;
 
@@ -18,21 +19,25 @@ public class SliderInputfieldLink : MonoBehaviour {
 
 	public float intensity;
 
-	void Start() {
-		if (inputFieldIntensity && sliderIntensity) {
+	void Start()
+	{
+		if (inputFieldIntensity && sliderIntensity)
+		{
 			inputFieldIntensity.onValueChanged.AddListener(delegate {InputFieldUpdate();});
 			sliderIntensity.onValueChanged.AddListener(delegate {SliderUpdate();});
 		}
 	}
 
-	private void SliderUpdate() {
+	private void SliderUpdate()
+	{
 		inputFieldIntensity.text = sliderIntensity.value.ToString();
 		intensity = sliderIntensity.value;
 		if (editor)
-			editor.pattern.fingers[(int)id].pattern[editor.getIteration()] = (int)intensity;
+			editor.pattern.motors[(int)id].pattern[editor.GetIteration()] = (int)intensity;
 	}
 
-	private void InputFieldUpdate() {
+	private void InputFieldUpdate()
+	{
 		int value = 0;
 		if (inputFieldIntensity.text.Length > 0 && inputFieldIntensity.text.ToCharArray()[0] == '-')
 			inputFieldIntensity.text = "0";
@@ -41,10 +46,10 @@ public class SliderInputfieldLink : MonoBehaviour {
 		sliderIntensity.value = Mathf.Clamp(value, 0, 100);
 		intensity = sliderIntensity.value;
 		if (editor)
-			editor.pattern.fingers[(int)id].pattern[editor.getIteration()] = (int)intensity;
+			editor.pattern.motors[(int)id].pattern[editor.GetIteration()] = (int)intensity;
 	}
 
-	public void setValues(float newIntensity)
+	public void SetValues(float newIntensity)
 	{
 		newIntensity = Mathf.Clamp(newIntensity, 0, 100);
 		inputFieldIntensity.text = newIntensity.ToString();

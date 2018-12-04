@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class basicController : MonoBehaviour {
+public class basicController : MonoBehaviour
+{
 	[SerializeField]
 	float speed = 10;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
+
+	void Update ()
+	{
 		float vertical = Input.GetAxis("Vertical") * speed * Time.deltaTime;
 		float horizontal = Input.GetAxis("Horizontal") * speed * Time.deltaTime;
 
