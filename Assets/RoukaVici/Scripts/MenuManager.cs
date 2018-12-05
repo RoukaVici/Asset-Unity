@@ -19,19 +19,19 @@ public class MenuManager : MonoBehaviour
 		}
 	}
 
+	[SerializeField] KeyCode toggleKey;
+	bool isVisible = false, isEditing = false;
+	
+	[SerializeField] Color selectedItemColor;
+	Color currentItemColor;
 
-	[SerializeField]
-	private Color selectedItemColor;
-	private Color currentItemColor;
+	[SerializeField] GameObject patternListMenu;
+	Animation patternListAnim;
 
-	[SerializeField]
-	private GameObject patternList;
+	[SerializeField] GameObject patternEditorMenu;
+	Animation patternEditorAnim;
 
-	[SerializeField]
-	private GameObject patternEditorMenu;
-
-	[SerializeField]
-	private PatternEditorData patternEditorData;
+	[SerializeField] PatternEditorData patternEditorData;
 	public int patternNbLimit = 20;
 
 	public GameObject slotPrefab;
@@ -47,23 +47,26 @@ public class MenuManager : MonoBehaviour
 			Destroy(gameObject);
 
 		DontDestroyOnLoad(gameObject);
-		DisplayPatternList();
+	}
+
+	void Start()
+	{
+		patternListAnim = patternListMenu.GetComponent<Animation>();
+		patternEditorAnim = patternEditorMenu.GetComponent<Animation>();
 	}
 
 	public void DisplayPatternList()
 	{
-		if (patternList)
-			patternList.SetActive(true);
-		if (patternEditorMenu)
-			patternEditorMenu.SetActive(false);
+		isEditing = false;
+		patternListAnim.Play("SlideInLeft");
+		patternEditorAnim.Play("SlideOutDown");
 	}
 
 	private void DisplayPatternEditorMenu()
 	{
-		if (patternList)
-			patternList.SetActive(false);
-		if (patternEditorMenu)
-			patternEditorMenu.SetActive(true);
+		isEditing = true;
+		patternEditorAnim.Play("SlideInDown");
+		patternListAnim.Play("SlideOutLeft");
 	}
 
 	public void AddPattern()
@@ -148,5 +151,35 @@ public class MenuManager : MonoBehaviour
 		data.removePattern.onClick.AddListener(delegate {RemovePattern(data.ID);});
 		RoukaViciController.instance.patternButtons.Add(button);
 		RearrangeButtons();
+	}
+
+	private void ToggleUI()
+	{
+		if (isVisible)
+		{
+			// Display
+			if (isEditing)
+				patternEditorAnim.Play("SlideOutDown");
+			else
+				patternListAnim.Play("SlideOutLeft");
+		}
+		else
+		{
+			// Hide
+			if (isEditing)
+				patternEditorAnim.Play("SlideInDown");
+			else
+				patternListAnim.Play("SlideInLeft");
+		}
+		isVisible = !isVisible;
+	}
+
+	void Update()
+	{
+		if (Input.GetKeyDown(toggleKey))
+		{
+			Debug.Log("TOGGLE");
+			ToggleUI();
+		}
 	}
 }
