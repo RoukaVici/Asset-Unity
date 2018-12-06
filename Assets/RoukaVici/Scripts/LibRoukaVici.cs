@@ -77,7 +77,7 @@ public class LibRoukaVici : MonoBehaviour
     void OnApplicationQuit()
     {
         Debug.Log("Roukavici library shutting down...");
-        StopRVici();
+        //StopRVici();
         Debug.Log("Roukavici library shutdown: OK.");
     }
 

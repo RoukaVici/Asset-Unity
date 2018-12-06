@@ -9,6 +9,7 @@ public class StatusData : MonoBehaviour
 	ConnectionStatus current = ConnectionStatus.Disconnected;
 	[SerializeField] GameObject connectedImage, errorImage, loadingImage;
 	Animator connectedImageAnimator;
+	Thread connection;
 	bool threadWorking = false;
 	void Start ()
 	{
@@ -27,6 +28,8 @@ public class StatusData : MonoBehaviour
 			errorImage.SetActive(false);
 			loadingImage.SetActive(false);
 			connectedImageAnimator.StopPlayback();
+			if (LibRoukaVici.Status() != 0)
+				current = ConnectionStatus.Disconnected;
 		}
 		else if (current == ConnectionStatus.Disconnected)
 		{
@@ -66,9 +69,17 @@ public class StatusData : MonoBehaviour
 		loadingImage.SetActive(true);
 
 		connectedImageAnimator.Play("Rotation");
-		Thread connection = new Thread(ConnectionThread);
+		connection = new Thread(ConnectionThread);
 		threadWorking = true;
 		current = ConnectionStatus.Connecting;
 		connection.Start();
+	}
+
+	void OnDestroy()
+	{
+		if (threadWorking)
+		{
+			connection.Interrupt();
+		}
 	}
 }
