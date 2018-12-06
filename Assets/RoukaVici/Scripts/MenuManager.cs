@@ -211,7 +211,6 @@ public class MenuManager : MonoBehaviour
 	{
 		if (Input.GetKeyDown(toggleKey))
 		{
-			Debug.Log("TOGGLE");
 			ToggleUI();
 		}
 	}
