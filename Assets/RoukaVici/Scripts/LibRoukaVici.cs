@@ -3,6 +3,9 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
+/// <summary>
+/// A library of static functions calling RoukaVici's functions
+/// </summary>
 public class LibRoukaVici : MonoBehaviour
 {
     [DllImport ("roukavici")]
@@ -78,6 +81,10 @@ public class LibRoukaVici : MonoBehaviour
         Debug.Log("Roukavici library shutdown: OK.");
     }
 
+    /// <summary>
+    /// Change the device manager to 2 (Bluetooth) and looks for devices
+    /// </summary>
+    /// <returns></returns>
     public static int TryBluetoothConnection()
     {
         ChangeDeviceManager(2);

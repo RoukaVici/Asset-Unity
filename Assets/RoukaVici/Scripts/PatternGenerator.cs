@@ -4,16 +4,26 @@ using System.IO;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+/// <summary>
+/// Generates slots for the UI by reading json pattern files
+/// </summary>
 [RequireComponent(typeof(MenuManager))]
 public class PatternGenerator : MonoBehaviour
 {
+    /// <summary>
+    /// Read the content from a given folder
+    /// </summary>
+    /// <param name="folder">The folder path to read</param>
 	private void GetFiles(string folder)
 	{
 		DirectoryInfo dir = new DirectoryInfo(folder);
 		FileInfo[] info = dir.GetFiles("*.json");
 
+        int patternNbLimit = 10;
 		foreach (FileInfo f in info)
 		{
+            if (patternNbLimit-- < 0)
+                break ;
 			string data = File.ReadAllText(f.FullName);
 			string arrayData = data.Remove(1, data.IndexOf("\"motors\"") - 1);
 			VibrationPattern vs = JsonUtility.FromJson<VibrationPattern>(data);
@@ -22,6 +32,7 @@ public class PatternGenerator : MonoBehaviour
 		}
 		if (RoukaViciController.instance.vibrationPatterns.Count == 0)
 		{
+            // If no file were found, create a default one
 			VibrationPattern vs = new VibrationPattern();
 			vs.duration = 0.5f;
 			vs.name = "Default";

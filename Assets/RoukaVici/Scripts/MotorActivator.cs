@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Handles interaction such as collision, clicks and key presses
+/// </summary>
 [RequireComponent(typeof(Renderer), typeof(Collider))]
 public class MotorActivator : MonoBehaviour
 {
@@ -32,12 +35,14 @@ public class MotorActivator : MonoBehaviour
 	{
 		if (Input.GetKeyDown (assignedKey))
 		{
+            // Key pressed
 			vibrating = true;
 			rend.material.color = activatedColor;
 			print("Activating Motor " + motor.ToString());
 		} 
 		else if (Input.GetKeyUp (assignedKey))
 		{
+            // Key released
 			vibrating = false;
 			mTime = 0;
 			currentStepIndex = 0;
@@ -47,6 +52,7 @@ public class MotorActivator : MonoBehaviour
 		}
 		if (vibrating && RoukaViciController.instance)
 		{
+            // Handle vibration
 			mTime += Time.deltaTime;
 			List<VibrationPattern> patterns = RoukaViciController.instance.vibrationPatterns;
 			int patternID = RoukaViciController.instance.patternID;
@@ -66,6 +72,7 @@ public class MotorActivator : MonoBehaviour
 	{
 		if (Input.GetMouseButtonDown(0))
 		{
+            // Start Vibrating
 			vibrating = !vibrating;
 			rend.material.color = (vibrating ? activatedColor : currentColor);
 			print ((vibrating ? "Activating Motor " : "Deactivating Motor ") + motor.ToString());
@@ -76,6 +83,7 @@ public class MotorActivator : MonoBehaviour
     {
 		if (vibrating)
 			return ;
+        // Start vibrating
 		print("Activating Motor " + motor.ToString());
 		rend.material.color = activatedColor;
        	vibrating = true;
@@ -83,6 +91,7 @@ public class MotorActivator : MonoBehaviour
 
 	void OnTriggerExit(Collider other)
 	{
+        // Stio vibrating
 		vibrating = false;
 		rend.material.color = currentColor;
 		print("Deactivating Motor " + motor.ToString());

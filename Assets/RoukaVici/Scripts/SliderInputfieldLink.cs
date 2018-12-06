@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Binds the values of an InputField and a Slider
+/// </summary>
 public class SliderInputfieldLink : MonoBehaviour
 {
 	[SerializeField]

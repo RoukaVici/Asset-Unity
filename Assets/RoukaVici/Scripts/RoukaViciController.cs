@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Holds references to every required for the other components.
+/// This script will make the gameobject persistent through scenes.
+/// </summary>
 public class RoukaViciController : MonoBehaviour
 {
 	private static RoukaViciController _instance;
@@ -30,6 +34,10 @@ public class RoukaViciController : MonoBehaviour
 		DontDestroyOnLoad(gameObject);
 	}
 
+    /// <summary>
+    /// Selects the pattern to use for the next vibrations
+    /// </summary>
+    /// <param name="newID">The ID of the newly selected pattern</param>
 	public void setVibrationPattern(int newID)
 	{
 		newID = newID < 0 ? 0 : newID;

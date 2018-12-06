@@ -4,6 +4,9 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Handles all the menus of the UI
+/// </summary>
 [RequireComponent(typeof(PatternGenerator))]
 public class MenuManager : MonoBehaviour
 {
@@ -69,6 +72,10 @@ public class MenuManager : MonoBehaviour
 		patternListAnim.Play("SlideOutLeft");
 	}
 
+    /// <summary>
+    /// Create a temporary VIbrationPattern object, and give it to the editor.
+    /// Also displays the editor.
+    /// </summary>
 	public void AddPattern()
 	{
 		if (RoukaViciController.instance.patternButtons.Count >= patternNbLimit)
@@ -87,16 +94,20 @@ public class MenuManager : MonoBehaviour
 		EditPattern(RoukaViciController.instance.vibrationPatterns.Count - 1);
 	}
 
+    /// <summary>
+    /// Delete the given pattern from RoukaVici's controller list
+    /// </summary>
+    /// <param name="id">The ID of the pattern to remove</param>
 	public void RemovePattern(int id)
 	{
 		if (RoukaViciController.instance.patternButtons.Count <= 1)
 			return;
 		# if UNITY_STANDALONE_WIN
-			if (File.Exists("Patterns\\" + RoukaViciController.instance.vibrationPatterns[id].name + ".json"))
-				File.Delete("Patterns\\" + RoukaViciController.instance.vibrationPatterns[id].name + ".json");
+			if (File.Exists("Vibration Patterns\\" + RoukaViciController.instance.vibrationPatterns[id].name + ".json"))
+				File.Delete("Vibration Patterns\\" + RoukaViciController.instance.vibrationPatterns[id].name + ".json");
 		# else
-			if (File.Exists("Patterns/" + RoukaViciController.instance.vibrationPatterns[id].name + ".json"))
-				File.Delete("Patterns/" + RoukaViciController.instance.vibrationPatterns[id].name + ".json");
+			if (File.Exists("Vibration Patterns/" + RoukaViciController.instance.vibrationPatterns[id].name + ".json"))
+				File.Delete("Vibration Patterns/" + RoukaViciController.instance.vibrationPatterns[id].name + ".json");
 		# endif
 		Destroy(RoukaViciController.instance.patternButtons[id]);
 		RoukaViciController.instance.patternButtons.RemoveAt(id);
@@ -110,6 +121,9 @@ public class MenuManager : MonoBehaviour
 			RearrangeButtons();
 	}
 
+    /// <summary>
+    /// Re order the stots after a removal
+    /// </summary>
 	public void RearrangeButtons()
 	{
 		int i = 0;
@@ -120,6 +134,10 @@ public class MenuManager : MonoBehaviour
 		}
 	}
 
+    /// <summary>
+    /// Loads the desired pattern to edit
+    /// </summary>
+    /// <param name="editID">The ID of the pattern to edit</param>
 	public void EditPattern(int editID)
 	{
 		DisplayPatternEditorMenu();
@@ -127,6 +145,9 @@ public class MenuManager : MonoBehaviour
 		patternEditorData.DisplayIteration();
 	}
 
+    /// <summary>
+    /// Prepare the UI by highlighting the right selected slot
+    /// </summary>
 	public void InitializeUI()
 	{
 		PatternData data = RoukaViciController.instance.patternButtons[0].GetComponent<PatternData>();
@@ -134,12 +155,21 @@ public class MenuManager : MonoBehaviour
 		data.background.color = selectedItemColor;
 	}
 
+    /// <summary>
+    /// Updates the color of the selected slot, given the new and the previous IDs
+    /// </summary>
+    /// <param name="newID">The ID of the newly selected pattern</param>
+    /// <param name="oldID">The ID of the previously selected pattern</param>
 	public void SelectPatternButton(int newID, int oldID)
 	{
 		RoukaViciController.instance.patternButtons[oldID].GetComponent<PatternData>().background.color = currentItemColor;
 		RoukaViciController.instance.patternButtons[newID].GetComponent<PatternData>().background.color = selectedItemColor;
 	}
 
+    /// <summary>
+    /// Add a slot to the list of patterns, from a given VibrationPattern object
+    /// </summary>
+    /// <param name="vs">The newly created VibrationPattern object</param>
 	public void AddPatternSlot(VibrationPattern vs)
 	{
 		GameObject button = Instantiate(slotPrefab);
@@ -153,6 +183,9 @@ public class MenuManager : MonoBehaviour
 		RearrangeButtons();
 	}
 
+    /// <summary>
+    /// Turns ON / OFF the UI
+    /// </summary>
 	private void ToggleUI()
 	{
 		if (isVisible)

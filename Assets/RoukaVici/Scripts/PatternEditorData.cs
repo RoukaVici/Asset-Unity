@@ -36,6 +36,10 @@ public static class JsonHelper
 	
 }
 
+/// <summary>
+/// A container that holds information regarding UI
+/// elements required to edit a VibrationPattern object
+/// </summary>
 public class PatternEditorData : MonoBehaviour
 {
 	public int currentPatternID = 0;
@@ -55,6 +59,10 @@ public class PatternEditorData : MonoBehaviour
 	[SerializeField]
 	public VibrationPattern pattern;
 
+    /// <summary>
+    /// Updates every values to the first iteration's selected pattern
+    /// </summary>
+    /// <param name="editID">The ID of the pattern being edited</param>
 	public void PrepareEditor(int editID)
 	{
 		dropdownIteration.value = 0;
@@ -80,6 +88,9 @@ public class PatternEditorData : MonoBehaviour
 		}
 	}
 
+    /// <summary>
+    /// Update the values to the selected iteration
+    /// </summary>
 	public void DisplayIteration()
 	{
 		for (int i = 0 ; i < (int)motorID.LAST_MOTOR ; ++i)
@@ -88,6 +99,10 @@ public class PatternEditorData : MonoBehaviour
 		}
 	}
 
+    /// <summary>
+    /// Updates the json file with the new content.
+    /// Delete the previous json file if names were changed
+    /// </summary>
 	public void SavePattern()
 	{
 		string oldFile = RoukaViciController.instance.vibrationPatterns[currentPatternID].name;

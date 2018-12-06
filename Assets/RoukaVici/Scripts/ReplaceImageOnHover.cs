@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+/// <summary>
+/// Replace an Image's Sprite when hovered
+/// </summary>
 [RequireComponent(typeof(Image))]
 public class ReplaceImageOnHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
